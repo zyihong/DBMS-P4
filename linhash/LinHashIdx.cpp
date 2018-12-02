@@ -5,6 +5,7 @@
 #include <cassert>
 #include <bitset>
 #include <iostream>
+#include <algorithm>
 
 // You should not need to modify this function.
 // 
@@ -62,25 +63,62 @@ LinHashIdx::LinHashIdx() : next(0), level(0)
     }
 }
 
+int LinHashIdx::getHashNum(int x, unsigned int L){
+    return (x % (INITIAL_NUM_BUCKETS * int(pow(2,L))));
+}
+
 // Insert the input into the correct bucket, and split the "next" bucket if the insert causes an overflow
 // Only insert if the input does not already exist in the index
 void LinHashIdx::insert(std::string input)
 {
     // Insert your code here
     if(contains(input)){return;}
-    int BucketNum = custom_hash(input);
-    if (directory[BucketNum].insert(input)){
+    AllKeys.push_back(input);
+    int BucketNum = getHashNum(custom_hash(input), level);
+    unsigned int insertLevel = level;
+    if (BucketNum < next){
+        //insert into a splited bucket, rehash!
+        insertLevel++;
+        BucketNum = getHashNum(custom_hash(input), insertLevel);
+    }
+    if (directory[BucketNum]->insert(input)){
         //use an overflow bucket, split
-        
+        handleSplit(next);
     }
 
 }
+
+
+void LinHashIdx::handleSplit(int BucketNum){
+    std::vector<std::string> rehashKeys = directory[BucketNum]->KeysInThisBuckets;
+    //delete directory[BucketNum]->overflowBucket;
+    delete directory[BucketNum];
+
+    directory[BucketNum] = new Bucket;
+    Bucket* splitBucket = new Bucket;
+    directory.push_back(splitBucket);
+    std::sort(rehashKeys.begin(), rehashKeys.end());
+    for (auto it = rehashKeys.begin(); it != rehashKeys.end(); it++){
+        //insert(*it);
+        int newBucketNum = getHashNum(custom_hash(*it), level+1);
+        directory[newBucketNum]->insert(*it);
+    }
+    next++;
+    if (next >= INITIAL_NUM_BUCKETS * int(pow(2,level))){
+        level++;
+        next = 0;
+    }
+}
+
 
 // Search the index for the given value, and return true if it's found
 bool LinHashIdx::contains(std::string input)
 {
     // Insert your code here
-
+    if(find(AllKeys.begin(), AllKeys.end(), input) == AllKeys.end()){
+        //not in yet
+        return false;
+    }
     return true;
 }
 

@@ -10,6 +10,7 @@ class Bucket
 {
 public:
 
+	std::vector<std::string> KeysInThisBuckets;
     Bucket();
     ~Bucket();
     bool insert(std::string input);

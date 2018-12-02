@@ -21,6 +21,26 @@ Bucket::~Bucket()
 bool Bucket::insert(std::string input)
 {
     // Insert your code here
+    KeysInThisBuckets.push_back(input);
+    if(overflowBucket == nullptr){
+        //if(keys.size() == MAX_BUCKET_SIZE){
+            //overflow
+        //}
+        if (keys.size() == MAX_BUCKET_SIZE){
+            overflowBucket = new Bucket;
+            overflowBucket->keys.push_back(input);
+            return true;
+
+        }
+        else{
+            keys.push_back(input);
+        }
+
+    }
+    else {
+        overflowBucket->keys.push_back(input);
+        return true;
+    }
 
     return false;
 }
