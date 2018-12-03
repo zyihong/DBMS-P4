@@ -78,7 +78,7 @@ void ExtSortRange::pass0Sort()
 // Hint: You may use member variable
 bool ExtSortRange::passMergeSort() 
 {
-	if(groupSize >= pageRange.size()){
+	if(groupSize >= int(pageRange.size())){
 		return false; // place holder
 	}
 	else{
@@ -96,10 +96,10 @@ bool ExtSortRange::passMergeSort()
 		while(true){
 			//there is still pages need to be merge
 			int base = round * groupSize * (BUFFER_PAGE - 1);
-			if(base >= pageRange.size()){break;}
+			if(base >= int(pageRange.size())){break;}
 			std::vector<std::vector<std::vector<int>>> chunks;
 			chunks.resize(BUFFER_PAGE - 1);
-			for (int i = 0; i + base < pageRange.size() && i < groupSize*(BUFFER_PAGE - 1); i++){
+			for (int i = 0; i + base < int(pageRange.size()) && i < groupSize*(BUFFER_PAGE - 1); i++){
 				chunks[(i / groupSize)].push_back(pageRange[i + base]->getData());
 				delete pageRange[i + base];
 				pageRange[i + base] = nullptr;

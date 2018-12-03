@@ -12,7 +12,7 @@ Page::~Page() {}
 bool Page::load(int inputData)
 {
 	bool loaded = true;
-	if (dataVec.size() == TUPLES_PER_PAGE) 
+	if (int(dataVec.size()) == TUPLES_PER_PAGE)
 	{
 		loaded = false;
 	}
