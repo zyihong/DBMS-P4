@@ -38,7 +38,9 @@ bool Bucket::insert(std::string input)
 
     }
     else {
-        overflowBucket->keys.push_back(input);
+        //while(overflowBucket)
+        //overflowBucket->keys.push_back(input);
+        overflowBucket->insert(input);
         return true;
     }
 
